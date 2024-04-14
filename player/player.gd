@@ -1,6 +1,8 @@
 extends StaticBody2D
 
-const Slime = preload("res://spawns/slime/slime.tscn")
+enum State {
+	IDLE, CASTING, WAITING
+}
 
 const ARROW_OFFSET = [
 	Vector2(12, 0),
@@ -30,24 +32,101 @@ var facing: Vector2 = Vector2(1, 0) :
 		arrow.position = ARROW_OFFSET[index]
 		arrow.rotation_degrees = ARROW_ROTATION[index]
 		arrow_shadow.position = ARROW_SHADOW_OFFSET[index]
+		raycast.target_position = facing * Vector2(16, 16)
 
+var spawn_index = 0
+var is_enemy = false
+var cast_spawn_type = SpawnManager.Spawn.Slime
+var max_mana = 100
+var mana = max_mana:
+	set(value):
+		mana = clamp(value, 0, max_mana)
+		Globals.ManaBar.value = mana
+var max_health = 100
+var health = max_health:
+	set(value):
+		health = clamp(value, 0, max_health)
+		Globals.HealthBar.value = health
+		
+var default_health_regen = 1
+var health_regen_count = default_health_regen
+
+var default_mana_regen = 1
+var mana_regen_count = default_mana_regen
+var ignore_enemies = false
+
+var state = State.IDLE :
+	set(value):
+		if has_method("state_exited_%s" % State.keys()[state].to_lower()):
+			call("state_exited_%s" % State.keys()[state].to_lower())
+		state = value
+		if has_method("state_entered_%s" % State.keys()[state].to_lower()):
+			call("state_entered_%s" % State.keys()[state].to_lower())
 
 @onready var sprite = $Sprite2D
 @onready var arrow = $Arrow
 @onready var arrow_shadow = $Arrow/Shadow
 @onready var animation = $AnimationPlayer
+@onready var raycast = $RayCast2D
+@onready var shader_animation = $ShaderAnimation
+
+
+var runes = [null, null, null, null, null, null, null, null, null]
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	facing = Vector2(1, 0)
-
+	var rune = Rune.new()
+	rune.rune_type = Rune.RuneType.SPAWN
+	rune.rune_type_index = SpawnManager.Spawn.Bow
+	runes[0] = rune
+	
+	rune = Rune.new()
+	rune.rune_type = Rune.RuneType.SPAWN
+	rune.rune_type_index = SpawnManager.Spawn.Ghost
+	runes[1] = rune
+	
+	update_runes()
+	
+	
+func update_runes():
+	for i in range(len(runes)):
+		Globals.Spells.get_child(i).set_rune(runes[i])
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	health_regen_count -= delta
+	mana_regen_count -= delta
+	if health_regen_count <= 0:
+		health += 1
+		health_regen_count = get_health_regen()
+	
+	if mana_regen_count <= 0:
+		mana += 1
+		mana_regen_count = get_mana_regen()
 	
 	
 func _input(event):
+	if has_method("state_input_%s" % State.keys()[state].to_lower()):
+		call("state_input_%s" % State.keys()[state].to_lower(), event)
+	
+	
+func state_input_idle(event):
+	input_control(event)
+	if event is InputEventKey and (event.keycode >= KEY_1 and event.keycode <= KEY_9 or event.keycode >= KEY_KP_1 and event.keycode <= KEY_KP_9):
+		if event.keycode >= KEY_KP_1:
+			cast_spawn_type = event.keycode % KEY_KP_1
+		else:
+			cast_spawn_type = event.keycode % KEY_1
+		if runes[cast_spawn_type] and ((runes[cast_spawn_type] and runes[cast_spawn_type].rune_type == runes[cast_spawn_type].RuneType.SPELL) or not raycast.is_colliding()):
+			if mana >= 10:
+				state = State.CASTING
+	
+func state_input_waiting(event):
+	input_control(event)
+	
+func input_control(event):
 	if event.is_action_pressed("ui_left"):
 		facing = Vector2(-1, 0)
 	elif event.is_action_pressed("ui_right"):
@@ -56,16 +135,55 @@ func _input(event):
 		facing = Vector2(0, 1)
 	elif event.is_action_pressed("ui_up"):
 		facing = Vector2(0, -1)
-	elif event.is_action_pressed("ui_accept"):
-		animation.play("cast_neutral")
+		
+	
+func state_entered_idle():
+	animation.play("idle")
 	
 	
-func _on_animation_player_animation_finished(anim_name):
-	if not animation:
+func state_entered_casting():
+	mana -= 10
+	animation.play("cast_neutral")
+	
+	
+func is_alive():
+	return true
+	
+	
+func damage(amount):
+	shader_animation.play("flash")
+	health -= amount
+	
+	
+func cast_trigger_frame():
+	if not animation or runes[cast_spawn_type] == null:
+		state = State.WAITING
 		return
+	if runes[cast_spawn_type].rune_type == Rune.RuneType.SPAWN:
+		var spawn = SpawnManager.get_spawn(runes[cast_spawn_type].rune_type_index)
+		get_parent().add_child(spawn)
+		spawn.is_enemy = false
+		spawn.spawn_index = spawn_index
+		spawn_index += 1
+		spawn.global_position = global_position + facing * Vector2(16, 16)
+		spawn.direction = facing
+		state = State.WAITING
+	else:
+		var spell = SpellManager.get_spell(runes[cast_spawn_type].rune_type_index)
+		get_parent().add_child(spell)
+		spell.global_position = global_position + facing * Vector2(16, 16)
+		spell.direction = facing
+		state = State.WAITING
+
+
+func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "cast_neutral":
-		animation.play("idle")
-		var slime = Slime.instantiate()
-		slime.global_position = global_position + facing * Vector2(16, 16)
-		slime.direction = facing
-		get_parent().add_child(slime)
+		state = State.IDLE
+	
+	
+func get_health_regen():
+	return default_health_regen
+	
+	
+func get_mana_regen():
+	return default_mana_regen

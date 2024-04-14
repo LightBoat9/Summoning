@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5rdf2qi45a24"]
+
+[ext_resource type="Texture2D" uid="uid://dux17tdl8uq1e" path="res://props/portal/portal.png" id="1_5vv4d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sw8g2"]
+size = Vector2(12, 12)
+
+[node name="Portal" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_5vv4d")
+offset = Vector2(0, -8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_sw8g2")

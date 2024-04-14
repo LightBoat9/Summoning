@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://btes04h3bolda"]
+
+[ext_resource type="Script" path="res://spells/fireball/fireball.gd" id="1_035bx"]
+[ext_resource type="Texture2D" uid="uid://nx0wdyiij12x" path="res://spells/fireball/fireball_base.png" id="1_cfdj2"]
+[ext_resource type="Texture2D" uid="uid://h56ltv5pqj7y" path="res://spells/fireball/shadow.png" id="2_3c5ni"]
+[ext_resource type="Texture2D" uid="uid://cl4ylfelh720j" path="res://spells/fireball/fireball_particle.png" id="4_e7nqf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qviux"]
+size = Vector2(8, 8)
+
+[sub_resource type="Gradient" id="Gradient_8p2c5"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.5)
+
+[node name="Fireball" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_035bx")
+
+[node name="Shadow" type="Sprite2D" parent="."]
+texture = ExtResource("2_3c5ni")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -8)
+texture = ExtResource("1_cfdj2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_qviux")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(0, -8)
+amount = 32
+preprocess = 0.25
+texture = ExtResource("4_e7nqf")
+emission_shape = 1
+emission_sphere_radius = 4.0
+spread = 180.0
+gravity = Vector2(0, 2)
+initial_velocity_min = 2.0
+initial_velocity_max = 2.0
+color = Color(1, 0.65098, 0.6, 1)
+color_ramp = SubResource("Gradient_8p2c5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

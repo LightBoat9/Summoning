@@ -1,0 +1,129 @@
+[gd_scene load_steps=10 format=3 uid="uid://bgrnw8p42qgtj"]
+
+[ext_resource type="Texture2D" uid="uid://d2rcw6uytpclk" path="res://interface/basic_panel.png" id="1_wp2q6"]
+[ext_resource type="Script" path="res://interface/runes/rune_card/rune_card.gd" id="2_ajloa"]
+[ext_resource type="Texture2D" uid="uid://e16or1ettkve" path="res://spawns/slime/slime.png" id="2_m8jo6"]
+[ext_resource type="FontFile" uid="uid://b5f7i77od2dvl" path="res://interface/font/m5x7.ttf" id="3_esvrq"]
+[ext_resource type="Texture2D" uid="uid://1vypwgtne2xs" path="res://interface/icons/health.png" id="5_vdymx"]
+[ext_resource type="Texture2D" uid="uid://ct4nnebutwmup" path="res://interface/icons/attack.png" id="6_oelu6"]
+[ext_resource type="Texture2D" uid="uid://bw28jl2npotvh" path="res://interface/icons/shield.png" id="7_p4vm6"]
+[ext_resource type="Texture2D" uid="uid://kp8gwke33ngg" path="res://interface/icons/mana.png" id="8_n8u2k"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_si0dy"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+texture = ExtResource("1_wp2q6")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
+
+[node name="RuneCard" type="PanelContainer"]
+offset_right = 200.0
+offset_bottom = 384.0
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_si0dy")
+script = ExtResource("2_ajloa")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_m8jo6")
+expand_mode = 2
+stretch_mode = 3
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_esvrq")
+theme_override_font_sizes/font_size = 16
+text = "Slime"
+horizontal_alignment = 1
+
+[node name="HB" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="HB" type="HBoxContainer" parent="VBoxContainer/HB"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HB/HB"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("5_vdymx")
+
+[node name="Label" type="Label" parent="VBoxContainer/HB/HB"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_esvrq")
+text = "10"
+
+[node name="HB2" type="HBoxContainer" parent="VBoxContainer/HB"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HB/HB2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("6_oelu6")
+
+[node name="Label" type="Label" parent="VBoxContainer/HB/HB2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_esvrq")
+text = "10"
+
+[node name="HB3" type="HBoxContainer" parent="VBoxContainer/HB"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HB/HB3"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("7_p4vm6")
+
+[node name="Label" type="Label" parent="VBoxContainer/HB/HB3"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_esvrq")
+text = "10"
+
+[node name="HB4" type="HBoxContainer" parent="VBoxContainer/HB"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HB/HB4"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("8_n8u2k")
+
+[node name="Label" type="Label" parent="VBoxContainer/HB/HB4"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_esvrq")
+text = "10"
+
+[node name="Description" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_fonts/font = ExtResource("3_esvrq")
+text = "Passes through units dealing 5 damage to enemies."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

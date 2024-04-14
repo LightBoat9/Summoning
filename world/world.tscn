@@ -1,9 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://bb7kp6dexgnvj"]
+[gd_scene load_steps=27 format=3 uid="uid://bb7kp6dexgnvj"]
 
 [ext_resource type="PackedScene" uid="uid://c74ik1vyyor2r" path="res://player/player.tscn" id="1_7fyum"]
+[ext_resource type="Script" path="res://world/world.gd" id="1_f1st7"]
 [ext_resource type="Texture2D" uid="uid://de6fy3iyfev03" path="res://tiles/tiles.png" id="2_kmaeg"]
-[ext_resource type="PackedScene" uid="uid://ba71btgjmsr25" path="res://spawns/slime/slime.tscn" id="3_b33x1"]
-[ext_resource type="Texture2D" uid="uid://dux17tdl8uq1e" path="res://props/portal.png" id="4_5le4v"]
+[ext_resource type="Shader" path="res://spawns/spawn/spawn.gdshader" id="4_2gyym"]
+[ext_resource type="PackedScene" uid="uid://b5rdf2qi45a24" path="res://props/portal/portal.tscn" id="4_mabs0"]
+[ext_resource type="Texture2D" uid="uid://dy3n7px16rlj6" path="res://interface/spells/key_button.png" id="6_e387u"]
+[ext_resource type="PackedScene" uid="uid://d1ujvqp2obvu3" path="res://interface/spells/spell_button/spell_button.tscn" id="6_s2vxp"]
+[ext_resource type="Script" path="res://interface/spells/spells.gd" id="6_tiwku"]
+[ext_resource type="Script" path="res://interface/runes/Runes.gd" id="9_ehq6h"]
+[ext_resource type="PackedScene" uid="uid://bgrnw8p42qgtj" path="res://interface/runes/rune_card/rune_card.tscn" id="9_qt7mr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7u0kb"]
 texture = ExtResource("2_kmaeg")
@@ -14,7 +20,81 @@ texture = ExtResource("2_kmaeg")
 [sub_resource type="TileSet" id="TileSet_vtygm"]
 sources/0 = SubResource("TileSetAtlasSource_7u0kb")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fbj70"]
+resource_local_to_scene = true
+shader = ExtResource("4_2gyym")
+shader_parameter/flash = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_115og"]
+atlas = ExtResource("6_e387u")
+region = Rect2(0, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jopcw"]
+atlas = ExtResource("6_e387u")
+region = Rect2(18, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ld82u"]
+atlas = ExtResource("6_e387u")
+region = Rect2(36, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3sxu0"]
+atlas = ExtResource("6_e387u")
+region = Rect2(54, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_upv8u"]
+atlas = ExtResource("6_e387u")
+region = Rect2(72, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qhcwg"]
+atlas = ExtResource("6_e387u")
+region = Rect2(90, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1bl3"]
+atlas = ExtResource("6_e387u")
+region = Rect2(108, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1cris"]
+atlas = ExtResource("6_e387u")
+region = Rect2(126, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_so3o5"]
+atlas = ExtResource("6_e387u")
+region = Rect2(126, 0, 18, 18)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ev4lr"]
+bg_color = Color(0.247059, 0.121569, 0.235294, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_15eh5"]
+bg_color = Color(0.647059, 0.14902, 0.223529, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0mt6a"]
+bg_color = Color(0.0705882, 0.0901961, 0.239216, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hgcv5"]
+bg_color = Color(0.243137, 0.513726, 0.819608, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.8, 0.8, 0)
+
 [node name="World" type="Node2D"]
+script = ExtResource("1_f1st7")
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(8, -8)
@@ -23,30 +103,179 @@ format = 2
 layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 131072, 0, 3, 65536, 0, 4, 131072, 0, 5, 65536, 0, 6, 65536, 0, 65534, 0, 0, 65533, 0, 0, 65532, 0, 0, 65531, 131072, 0, 65530, 65536, 0, 65529, 65536, 0, 65528, 131072, 0, 131071, 0, 0, 196607, 0, 0, 262143, 0, 0, 327679, 0, 0, 393215, 65536, 0, 458751, 0, 0, -1, 0, 0, -65537, 0, 0, -131073, 65536, 0, -196609, 65536, 0, -262145, 131072, 0, -327681, 131072, 0, -393217, 65536, 0, -2, 65536, 0, -65536, 0, 0, 131070, 65536, 0, 65536, 65536, 0, 524287, 0, 0, 7, 0, 0, 65527, 0, 0, 589823, 0, 0, -458753, 0, 0)
 
 [node name="Player" parent="." instance=ExtResource("1_7fyum")]
+material = SubResource("ShaderMaterial_fbj70")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-
-[node name="Slime" parent="." instance=ExtResource("3_b33x1")]
-position = Vector2(120, 0)
+zoom = Vector2(2, 2)
 
 [node name="Portals" type="Node2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="Portals"]
+[node name="Portal" parent="Portals" instance=ExtResource("4_mabs0")]
 position = Vector2(120, 0)
-texture = ExtResource("4_5le4v")
-offset = Vector2(0, -8)
 
-[node name="Sprite2D2" type="Sprite2D" parent="Portals"]
+[node name="Portal2" parent="Portals" instance=ExtResource("4_mabs0")]
+position = Vector2(0, 120)
+
+[node name="Portal3" parent="Portals" instance=ExtResource("4_mabs0")]
 position = Vector2(-120, 0)
-texture = ExtResource("4_5le4v")
-offset = Vector2(0, -8)
 
-[node name="Sprite2D3" type="Sprite2D" parent="Portals"]
-position = Vector2(0, 128)
-texture = ExtResource("4_5le4v")
-offset = Vector2(0, -8)
-
-[node name="Sprite2D4" type="Sprite2D" parent="Portals"]
+[node name="Portal4" parent="Portals" instance=ExtResource("4_mabs0")]
 position = Vector2(0, -112)
-texture = ExtResource("4_5le4v")
-offset = Vector2(0, -8)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Interface" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HB" type="HBoxContainer" parent="CanvasLayer/Interface"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -106.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 79.0
+grow_horizontal = 0
+theme_override_constants/separation = 1
+
+[node name="Keys" type="GridContainer" parent="CanvasLayer/Interface/HB"]
+layout_mode = 2
+theme_override_constants/h_separation = 1
+theme_override_constants/v_separation = 1
+columns = 3
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_115og")
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_jopcw")
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_ld82u")
+
+[node name="TextureRect4" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_3sxu0")
+
+[node name="TextureRect5" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_upv8u")
+
+[node name="TextureRect6" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_qhcwg")
+
+[node name="TextureRect7" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_k1bl3")
+
+[node name="TextureRect8" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_1cris")
+
+[node name="TextureRect9" type="TextureRect" parent="CanvasLayer/Interface/HB/Keys"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_so3o5")
+
+[node name="Spells" type="GridContainer" parent="CanvasLayer/Interface/HB"]
+layout_mode = 2
+theme_override_constants/h_separation = 1
+theme_override_constants/v_separation = 1
+columns = 3
+script = ExtResource("6_tiwku")
+
+[node name="SpellButton" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="SpellButton2" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="SpellButton3" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="SpellButton4" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="SpellButton5" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="SpellButton6" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="SpellButton7" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="SpellButton8" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="SpellButton9" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
+layout_mode = 2
+
+[node name="Bars" type="VBoxContainer" parent="CanvasLayer/Interface"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 64.0
+offset_bottom = 40.0
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer/Interface/Bars"]
+custom_minimum_size = Vector2(128, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_ev4lr")
+theme_override_styles/fill = SubResource("StyleBoxFlat_15eh5")
+value = 90.0
+show_percentage = false
+
+[node name="ManaBar" type="ProgressBar" parent="CanvasLayer/Interface/Bars"]
+custom_minimum_size = Vector2(128, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_0mt6a")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hgcv5")
+value = 90.0
+show_percentage = false
+
+[node name="Runes" type="Control" parent="CanvasLayer"]
+process_mode = 2
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_ehq6h")
+
+[node name="HB" type="HBoxContainer" parent="CanvasLayer/Runes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.2
+anchor_right = 1.0
+anchor_bottom = 0.8
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="RuneCard1" parent="CanvasLayer/Runes/HB" instance=ExtResource("9_qt7mr")]
+layout_mode = 2
+
+[node name="RuneCard2" parent="CanvasLayer/Runes/HB" instance=ExtResource("9_qt7mr")]
+layout_mode = 2
+
+[node name="RuneCard3" parent="CanvasLayer/Runes/HB" instance=ExtResource("9_qt7mr")]
+layout_mode = 2
+
+[connection signal="visibility_changed" from="CanvasLayer/Runes" to="CanvasLayer/Runes" method="_on_visibility_changed"]

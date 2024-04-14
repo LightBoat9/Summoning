@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwadc7r3addpf"
-path="res://.godot/imported/shadow.png-f0c25591da2e5631eb2647756ecd2861.ctex"
+uid="uid://dux17tdl8uq1e"
+path="res://.godot/imported/portal.png-53712c92b32ad3fbcf5d77d1e29d7d03.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spawns/slime/shadow.png"
-dest_files=["res://.godot/imported/shadow.png-f0c25591da2e5631eb2647756ecd2861.ctex"]
+source_file="res://props/portal/portal.png"
+dest_files=["res://.godot/imported/portal.png-53712c92b32ad3fbcf5d77d1e29d7d03.ctex"]
 
 [params]
 

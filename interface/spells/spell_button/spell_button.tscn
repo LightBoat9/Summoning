@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://d1ujvqp2obvu3"]
+
+[ext_resource type="Texture2D" uid="uid://dy3n7px16rlj6" path="res://interface/spells/key_button.png" id="1_7gr45"]
+[ext_resource type="Script" path="res://interface/spells/spell_button/spell_button.gd" id="1_cu6ua"]
+[ext_resource type="Texture2D" uid="uid://b6yvq7yrlnlbe" path="res://interface/spells/spell_panel.png" id="2_vmbm5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_koq1i"]
+resource_local_to_scene = true
+atlas = ExtResource("1_7gr45")
+region = Rect2(0, 0, 9, 9)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2752x"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 4.0
+texture = ExtResource("2_vmbm5")
+
+[node name="SpellButton" type="VBoxContainer"]
+custom_minimum_size = Vector2(22, 0)
+offset_right = 22.0
+offset_bottom = 23.0
+mouse_filter = 2
+theme_override_constants/separation = 0
+script = ExtResource("1_cu6ua")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_koq1i")
+stretch_mode = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(44, 46)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_2752x")
+
+[node name="TextureButton" type="TextureButton" parent="PanelContainer"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+ignore_texture_size = true
+stretch_mode = 3
