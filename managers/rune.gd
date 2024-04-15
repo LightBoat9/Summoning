@@ -12,7 +12,9 @@ var rune_type_index = SpawnManager.Spawn.Slime
 	
 func get_texture():
 	if rune_type == RuneType.SPAWN:
-		return SpawnManager.SPAWN_SPRITES[rune_type_index]
+		var image = Image.create(16, 16, false, Image.FORMAT_RGBA8)
+		image.blit_rect(SpawnManager.SPAWN_SPRITES[rune_type_index].get_image(), Rect2(16, 16, 16, 16), Vector2i(0, 0))
+		return ImageTexture.create_from_image(image)
 	else:
 		return SpellManager.SPELL_SPRITES[rune_type_index]
 	

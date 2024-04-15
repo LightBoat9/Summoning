@@ -1,33 +1,42 @@
 extends Node
 
 enum Spells {
-	Fireball
+	Fireball,
+	Recall,
+	ForceBack
 }
 
 const SPELL_DAMAGE = {
-	Spells.Fireball: 10
+	Spells.Fireball: 30,
+	Spells.ForceBack: 10
 }
 
 const SPELL_COST = {
-	Spells.Fireball: 10
+	Spells.Fireball: 10,
+	Spells.Recall: 10,
+	Spells.ForceBack: 10
 }
 
-const Fireball = preload("res://spells/fireball/fireball.tscn")
-
 const SPELL_INSTANCES = {
-	Spells.Fireball: Fireball
+	Spells.Fireball: preload("res://spells/fireball/fireball.tscn"),
+	Spells.Recall: preload("res://spells/recall/recall.tscn"),
+	Spells.ForceBack: preload("res://spells/force_back/force_back.tscn"),
 }
 
 const SPELL_DESCRIPTIONS = {
-	Spells.Fireball: "Single target projectile"
+	Spells.Fireball: "Single target projectile",
+	Spells.Recall: "Return the last unit in the row and bring to full health",
+	Spells.ForceBack: "Send the first enemy to the end of the row and deal 10 damage"
 }
 
 const SPELL_SPRITES = {
-	Spells.Fireball: preload("res://spells/fireball/fireball_base.png")
+	Spells.Fireball: preload("res://spells/fireball/fireball_base.png"),
+	Spells.Recall: preload("res://spells/recall/recall.png"),
+	Spells.ForceBack: preload("res://spells/force_back/force_back.png")
 }
 
 func get_spell(spell_index):
-	var spell = SPELL_INSTANCES[Spells.Fireball].instantiate()
+	var spell = SPELL_INSTANCES[spell_index].instantiate()
 	return spell
 	
 	
@@ -40,7 +49,10 @@ func get_description(type):
 	
 	
 func get_damage(type):
-	return SPELL_DAMAGE[type]
+	if type in SPELL_DAMAGE:
+		return SPELL_DAMAGE[type]
+	else:
+		return 0
 	
 	
 func get_mana(type):

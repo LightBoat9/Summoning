@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cuhmtbnalecvb"]
+[gd_scene load_steps=4 format=3 uid="uid://cuhmtbnalecvb"]
 
 [ext_resource type="Script" path="res://spawns/slime/slime_explosion.gd" id="1_5n8dm"]
 [ext_resource type="Texture2D" uid="uid://d1lto4e60ofl8" path="res://spawns/slime/slime_particle.png" id="2_pdims"]
+[ext_resource type="AudioStream" uid="uid://cdos2jsxwbw3u" path="res://spawns/slime/explode.wav" id="3_5bgkp"]
 
 [node name="SlimeExplosion" type="Node2D"]
 script = ExtResource("1_5n8dm")
@@ -17,3 +18,8 @@ spread = 180.0
 gravity = Vector2(0, 32)
 initial_velocity_min = 32.0
 initial_velocity_max = 48.0
+
+[node name="AudioExplode" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_5bgkp")
+volume_db = -10.545
+autoplay = true

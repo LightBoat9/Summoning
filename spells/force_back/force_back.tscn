@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfhvsegpl8sft"]
+
+[ext_resource type="Script" path="res://spells/force_back/force_back.gd" id="1_0joxy"]
+
+[node name="ForceBack" type="Node2D"]
+script = ExtResource("1_0joxy")

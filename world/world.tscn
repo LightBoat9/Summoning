@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://bb7kp6dexgnvj"]
+[gd_scene load_steps=34 format=3 uid="uid://bb7kp6dexgnvj"]
 
 [ext_resource type="PackedScene" uid="uid://c74ik1vyyor2r" path="res://player/player.tscn" id="1_7fyum"]
 [ext_resource type="Script" path="res://world/world.gd" id="1_f1st7"]
@@ -10,12 +10,21 @@
 [ext_resource type="Script" path="res://interface/spells/spells.gd" id="6_tiwku"]
 [ext_resource type="Script" path="res://interface/runes/Runes.gd" id="9_ehq6h"]
 [ext_resource type="PackedScene" uid="uid://bgrnw8p42qgtj" path="res://interface/runes/rune_card/rune_card.tscn" id="9_qt7mr"]
+[ext_resource type="FontFile" uid="uid://b5f7i77od2dvl" path="res://interface/font/m5x7.ttf" id="9_qvfqj"]
+[ext_resource type="Texture2D" uid="uid://j1tgbu5nwmyn" path="res://interface/music.png" id="10_ulpqp"]
+[ext_resource type="Texture2D" uid="uid://jnmag78lb6sm" path="res://interface/no_music.png" id="11_mpt74"]
+[ext_resource type="AudioStream" uid="uid://xol6eclsu724" path="res://world/upgrade.wav" id="12_4stbk"]
+[ext_resource type="Script" path="res://interface/end_screen/EndScreen.gd" id="12_ciy4x"]
+[ext_resource type="AudioStream" uid="uid://c6yfxvbvwee28" path="res://world/SummoningWizard.wav" id="13_mnq0p"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7u0kb"]
 texture = ExtResource("2_kmaeg")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_vtygm"]
 sources/0 = SubResource("TileSetAtlasSource_7u0kb")
@@ -24,6 +33,7 @@ sources/0 = SubResource("TileSetAtlasSource_7u0kb")
 resource_local_to_scene = true
 shader = ExtResource("4_2gyym")
 shader_parameter/flash = false
+shader_parameter/stunned = false
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_115og"]
 atlas = ExtResource("6_e387u")
@@ -93,6 +103,9 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.8, 0.8, 0.8, 0)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pa7tm"]
+bg_color = Color(0.160784, 0.196078, 0.407843, 0.784314)
+
 [node name="World" type="Node2D"]
 script = ExtResource("1_f1st7")
 
@@ -100,7 +113,7 @@ script = ExtResource("1_f1st7")
 position = Vector2(8, -8)
 tile_set = SubResource("TileSet_vtygm")
 format = 2
-layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 131072, 0, 3, 65536, 0, 4, 131072, 0, 5, 65536, 0, 6, 65536, 0, 65534, 0, 0, 65533, 0, 0, 65532, 0, 0, 65531, 131072, 0, 65530, 65536, 0, 65529, 65536, 0, 65528, 131072, 0, 131071, 0, 0, 196607, 0, 0, 262143, 0, 0, 327679, 0, 0, 393215, 65536, 0, 458751, 0, 0, -1, 0, 0, -65537, 0, 0, -131073, 65536, 0, -196609, 65536, 0, -262145, 131072, 0, -327681, 131072, 0, -393217, 65536, 0, -2, 65536, 0, -65536, 0, 0, 131070, 65536, 0, 65536, 65536, 0, 524287, 0, 0, 7, 0, 0, 65527, 0, 0, 589823, 0, 0, -458753, 0, 0)
+layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 131072, 0, 3, 65536, 0, 4, 131072, 0, 5, 65536, 0, 6, 65536, 0, 65534, 0, 0, 65533, 0, 0, 65532, 0, 0, 65531, 131072, 0, 65530, 65536, 0, 65529, 65536, 0, 65528, 131072, 0, 131071, 0, 0, 196607, 0, 0, 262143, 0, 0, 327679, 0, 0, 393215, 65536, 0, 458751, 0, 0, -1, 0, 0, -65537, 0, 0, -131073, 65536, 0, -196609, 65536, 0, -262145, 131072, 0, -327681, 131072, 0, -393217, 65536, 0, -2, 65536, 0, -65536, 0, 0, 131070, 65536, 0, 65536, 65536, 0, 524287, 0, 0, 7, 0, 0, 65527, 0, 0, 589823, 0, 0, -458753, 0, 0, -65539, 0, 1, -393223, 65536, 1, -327687, 65536, 1, -262151, 131072, 1, -196615, 65536, 1, -131079, 65536, 1, -65543, 0, 1, -393222, 0, 1, -327686, 0, 1, -262150, 65536, 1, -196614, 65536, 1, -131078, 65536, 1, -65542, 65536, 1, -393221, 0, 1, -327685, 0, 1, -262149, 65536, 1, -196613, 65536, 1, -131077, 65536, 1, -65541, 0, 1, -393220, 0, 1, -327684, 0, 1, -262148, 131072, 1, -196612, 0, 1, -131076, 0, 1, -65540, 0, 1, -327689, 0, 1, -196617, 0, 1, -262153, 0, 1, -327688, 0, 1, -393224, 65536, 1, -327675, 0, 1, -327676, 0, 1, -393212, 65536, 1, -393213, 131072, 1, -393214, 65536, 1, -458749, 0, 1, -458748, 0, 1, -458747, 0, 1, -393211, 0, 1, -327677, 65536, 1, -458750, 0, 1, -262140, 0, 1, -196604, 0, 1, -196605, 65536, 1, -131069, 65536, 1, -131070, 0, 1, -131068, 65536, 1, -131067, 131072, 1, -196603, 0, 1, -196601, 65536, 1, -262137, 0, 1, -327678, 65536, 1, -262142, 0, 1, -262143, 0, 1, -262144, 0, 1, -196610, 0, 1, -262146, 0, 1, -327682, 0, 1, -393218, 0, 1, -3, 0, 1, -6, 0, 1, -7, 0, 1, -65545, 0, 1, 327673, 0, 1, 327674, 0, 1, 262138, 0, 1, 262139, 131072, 1, 262137, 0, 1, 196601, 0, 1, 196600, 0, 1, 196602, 65536, 1, 131069, 0, 1, 131065, 0, 1, 131063, 0, 1, 393209, 0, 1, 393208, 0, 1, 458744, 0, 1, 524280, 131072, 1, 589816, 0, 1, 589817, 0, 1, 655354, 0, 1, 589819, 0, 1, 589820, 0, 1, 524284, 0, 1, 458748, 0, 1, 262142, 0, 1, 327678, 0, 1, 393214, 0, 1, 458750, 0, 1, 524286, 0, 1, 327675, 65536, 1, 393211, 65536, 1, 327685, 0, 1, 327684, 0, 1, 458754, 0, 1, 524290, 0, 1, 524289, 0, 1, 524288, 0, 1, 458752, 0, 1, 327680, 0, 1, 262144, 0, 1, 262145, 0, 1, 196609, 0, 1, 196608, 0, 1, 131072, 0, 1, 131073, 0, 1, 131074, 0, 1, 131075, 0, 1, 131076, 0, 1, 65542, 0, 1, 131078, 0, 1, 65539, 0, 1, 131077, 0, 1, 131079, 0, 1, 131080, 0, 1, 262151, 0, 1, 327687, 0, 1, 393223, 0, 1, 262148, 0, 1, 458757, 0, 1, 524293, 0, 1, 589829, 0, 1, 655365, 0, 1, 524294, 0, 1, 524295, 131072, 1, 458756, 0, 1, 458755, 0, 1, 393218, 0, 1, 327682, 0, 1, 327683, 0, 1, 458746, 65536, 1, 458747, 65536, 1, 393212, 65536, 1, 327676, 65536, 1, 327677, 65536, 1, -262152, 65536, 1, -458760, 65536, 1, -196616, 65536, 1, -131081, 65536, 1, -131080, 65536, 1, -327679, 65536, 1, -262141, 65536, 1, -65532, 65536, 1, -65531, 65536, 1, -196602, 65536, 1, -131066, 65536, 1, -131065, 65536, 1, -327674, 65536, 1, 196603, 65536, 1, -393215, 131072, 1, 393220, 131072, 1)
 
 [node name="Player" parent="." instance=ExtResource("1_7fyum")]
 material = SubResource("ShaderMaterial_fbj70")
@@ -135,16 +148,17 @@ grow_vertical = 2
 [node name="HB" type="HBoxContainer" parent="CanvasLayer/Interface"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -106.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 79.0
-grow_horizontal = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -56.0
+offset_right = 232.0
+offset_bottom = -8.0
+grow_vertical = 0
 theme_override_constants/separation = 1
 
 [node name="Keys" type="GridContainer" parent="CanvasLayer/Interface/HB"]
+visible = false
 layout_mode = 2
 theme_override_constants/h_separation = 1
 theme_override_constants/v_separation = 1
@@ -190,7 +204,7 @@ texture = SubResource("AtlasTexture_so3o5")
 layout_mode = 2
 theme_override_constants/h_separation = 1
 theme_override_constants/v_separation = 1
-columns = 3
+columns = 5
 script = ExtResource("6_tiwku")
 
 [node name="SpellButton" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
@@ -208,18 +222,6 @@ layout_mode = 2
 [node name="SpellButton5" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
 layout_mode = 2
 
-[node name="SpellButton6" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
-layout_mode = 2
-
-[node name="SpellButton7" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
-layout_mode = 2
-
-[node name="SpellButton8" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
-layout_mode = 2
-
-[node name="SpellButton9" parent="CanvasLayer/Interface/HB/Spells" instance=ExtResource("6_s2vxp")]
-layout_mode = 2
-
 [node name="Bars" type="VBoxContainer" parent="CanvasLayer/Interface"]
 layout_mode = 1
 anchors_preset = -1
@@ -228,7 +230,10 @@ offset_top = 8.0
 offset_right = 64.0
 offset_bottom = 40.0
 
-[node name="HealthBar" type="ProgressBar" parent="CanvasLayer/Interface/Bars"]
+[node name="HB" type="HBoxContainer" parent="CanvasLayer/Interface/Bars"]
+layout_mode = 2
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer/Interface/Bars/HB"]
 custom_minimum_size = Vector2(128, 16)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_ev4lr")
@@ -236,13 +241,59 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_15eh5")
 value = 90.0
 show_percentage = false
 
-[node name="ManaBar" type="ProgressBar" parent="CanvasLayer/Interface/Bars"]
+[node name="Label" type="Label" parent="CanvasLayer/Interface/Bars/HB"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.392157)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("9_qvfqj")
+text = "100/100 +1/sec"
+
+[node name="HB2" type="HBoxContainer" parent="CanvasLayer/Interface/Bars"]
+layout_mode = 2
+
+[node name="ManaBar" type="ProgressBar" parent="CanvasLayer/Interface/Bars/HB2"]
 custom_minimum_size = Vector2(128, 16)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_0mt6a")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hgcv5")
 value = 90.0
 show_percentage = false
+
+[node name="Label" type="Label" parent="CanvasLayer/Interface/Bars/HB2"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.392157)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("9_qvfqj")
+text = "100/100 +1/sec"
+
+[node name="Points" type="Label" parent="CanvasLayer/Interface/Bars"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.392157)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("9_qvfqj")
+theme_override_font_sizes/font_size = 32
+text = "000000000"
+
+[node name="MusicButton" type="TextureButton" parent="CanvasLayer/Interface"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 40.0
+grow_horizontal = 0
+mouse_default_cursor_shape = 2
+toggle_mode = true
+texture_normal = ExtResource("10_ulpqp")
+texture_pressed = ExtResource("11_mpt74")
 
 [node name="Runes" type="Control" parent="CanvasLayer"]
 process_mode = 2
@@ -255,27 +306,88 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("9_ehq6h")
 
-[node name="HB" type="HBoxContainer" parent="CanvasLayer/Runes"]
+[node name="AudioRunes" type="AudioStreamPlayer" parent="CanvasLayer/Runes"]
+stream = ExtResource("12_4stbk")
+
+[node name="VB" type="VBoxContainer" parent="CanvasLayer/Runes"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.2
 anchor_right = 1.0
 anchor_bottom = 0.8
 offset_left = 8.0
-offset_top = 8.0
 offset_right = -8.0
-offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Runes/VB"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.392157)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("9_qvfqj")
+theme_override_font_sizes/font_size = 16
+text = "Choose a new spell"
+horizontal_alignment = 1
+
+[node name="HB" type="HBoxContainer" parent="CanvasLayer/Runes/VB"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 4
 
-[node name="RuneCard1" parent="CanvasLayer/Runes/HB" instance=ExtResource("9_qt7mr")]
+[node name="RuneCard1" parent="CanvasLayer/Runes/VB/HB" instance=ExtResource("9_qt7mr")]
 layout_mode = 2
 
-[node name="RuneCard2" parent="CanvasLayer/Runes/HB" instance=ExtResource("9_qt7mr")]
+[node name="RuneCard2" parent="CanvasLayer/Runes/VB/HB" instance=ExtResource("9_qt7mr")]
 layout_mode = 2
 
-[node name="RuneCard3" parent="CanvasLayer/Runes/HB" instance=ExtResource("9_qt7mr")]
+[node name="RuneCard3" parent="CanvasLayer/Runes/VB/HB" instance=ExtResource("9_qt7mr")]
 layout_mode = 2
 
+[node name="EndScreen" type="PanelContainer" parent="CanvasLayer"]
+process_mode = 2
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pa7tm")
+script = ExtResource("12_ciy4x")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/EndScreen"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Label" type="Label" parent="CanvasLayer/EndScreen/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("9_qvfqj")
+theme_override_font_sizes/font_size = 48
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="CanvasLayer/EndScreen/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("9_qvfqj")
+theme_override_font_sizes/font_size = 32
+text = "Final Score: 000000000"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/EndScreen/VBoxContainer"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+action_mode = 0
+text = "Try Again"
+
+[node name="AudioMusic" type="AudioStreamPlayer2D" parent="."]
+process_mode = 3
+stream = ExtResource("13_mnq0p")
+volume_db = -7.939
+autoplay = true
+
+[connection signal="toggled" from="CanvasLayer/Interface/MusicButton" to="." method="_on_music_button_toggled"]
 [connection signal="visibility_changed" from="CanvasLayer/Runes" to="CanvasLayer/Runes" method="_on_visibility_changed"]
+[connection signal="pressed" from="CanvasLayer/EndScreen/VBoxContainer/Button" to="CanvasLayer/EndScreen" method="_on_button_pressed"]

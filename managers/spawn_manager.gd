@@ -8,7 +8,22 @@ enum Spawn {
 	Ghost,
 	Golem,
 	Sword,
-	Bow
+	Bow,
+	Fairy,
+	Eyeball
+}
+
+
+const START_LEVEL = {
+	Spawn.Slime: 1,
+	Spawn.Shield: 1,
+	Spawn.Golem: 1,
+	Spawn.Snail: 2,
+	Spawn.Ghost: 2,
+	Spawn.Sword: 3,
+	Spawn.Eyeball: 3,
+	Spawn.Bow: 4,
+	Spawn.Fairy: 5
 }
 
 
@@ -20,6 +35,8 @@ const SPAWN_SPRITES = {
 	Spawn.Golem: preload("res://spawns/golem/golem.png"),
 	Spawn.Sword: preload("res://spawns/sword/sword.png"),
 	Spawn.Bow: preload("res://spawns/bow/bow.png"),
+	Spawn.Fairy: preload("res://spawns/fairy/fairy.png"),
+	Spawn.Eyeball: preload("res://spawns/eyeball/eyeball.png")
 }
 
 const SPAWN_MANAGERS = {
@@ -30,11 +47,15 @@ const SPAWN_MANAGERS = {
 	Spawn.Golem: preload("res://spawns/golem/golem.gd"),
 	Spawn.Sword: preload("res://spawns/sword/sword.gd"),
 	Spawn.Bow: preload("res://spawns/bow/bow.gd"),
+	Spawn.Fairy: preload("res://spawns/fairy/fairy.gd"),
+	Spawn.Eyeball: preload("res://spawns/eyeball/eyeball.gd")
 }
 
 
-const SPAWN_OFFSET = Vector2(120, 120)
+const SPAWN_OFFSET = Vector2(112, 112)
 
+var level = 1
+var spawn_index = 0
 
 @onready var spawn_timer = Timer.new()
 @onready var upgrade_timer = Timer.new()
@@ -54,6 +75,20 @@ func _ready():
 	upgrade_timer.connect("timeout", upgrade_timer_timeout)
 	upgrade_timer.start()
 	
+func reset():
+	spawn_index = 0
+	
+	spawn_timer.stop()
+	upgrade_timer.stop()
+	
+	spawn_timer.one_shot = false
+	spawn_timer.wait_time = 5
+	spawn_timer.start()
+	
+	upgrade_timer.one_shot = false
+	upgrade_timer.wait_time = 30
+	upgrade_timer.start()
+	
 func load_new_runes():
 	var new_runes = []
 	for i in range(Globals.Runes.get_child_count()):
@@ -66,6 +101,7 @@ func load_new_runes():
 			if failsafe <= 0:
 				break
 		new_runes.append(rune.get_title())
+		Globals.Runes.get_child(i).keyboard_index = i+1
 		Globals.Runes.get_child(i).set_rune(rune)
 		
 	Globals.RunesParent.show_runes()
@@ -78,8 +114,12 @@ func is_rune_unique(rune):
 	
 	
 func spawn():
-	var spawn_type = randi() % len(Spawn.keys())
-	var spawn = get_spawn(spawn_type)
+	var level_spawns = []
+	for index in Spawn.values():
+		if START_LEVEL[index] <= level:
+			level_spawns.append(index)
+	var spawn_type = randi() % len(level_spawns)
+	var spawn = get_spawn(level_spawns[spawn_type])
 	Globals.World.add_child(spawn)
 	var random_direction = randi() % 2
 	var random_flip = -1 if randi() % 2 == 1 else 1
@@ -87,6 +127,8 @@ func spawn():
 	spawn.global_position = SPAWN_OFFSET * spawn_direction
 	spawn.direction = -spawn_direction
 	spawn.is_enemy = true
+	spawn.spawn_index = spawn_index
+	spawn_index += 1
 	
 	
 func spawn_timer_timeout():
@@ -94,7 +136,15 @@ func spawn_timer_timeout():
 	
 	
 func upgrade_timer_timeout():
-	load_new_runes()
+	if level < 5:
+		load_new_runes()
+		
+		Globals.Player.default_mana_regen = 1 + (7 * min(5, level)/5.0)
+		spawn_timer.wait_time = 5 - (4 * (min(5, level)/5.0))
+	else:
+		spawn_timer.wait_time = 5 - (3 * (min(5, level)/5.0)) - (0.1 * level)
+	
+	level += 1
 	
 	
 func get_spawn(spawn_type):

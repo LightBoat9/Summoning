@@ -1,0 +1,208 @@
+[gd_scene load_steps=16 format=3 uid="uid://c74ik1vyyor2r"]
+
+[ext_resource type="Shader" path="res://spawns/spawn/spawn.gdshader" id="1_7a4sk"]
+[ext_resource type="Texture2D" uid="uid://cpxjad8vdipxn" path="res://player/player.png" id="1_v3odk"]
+[ext_resource type="Script" path="res://player/player.gd" id="1_vmyj3"]
+[ext_resource type="Texture2D" uid="uid://cqmi8sueojea5" path="res://player/shadow.png" id="2_adlyx"]
+[ext_resource type="Texture2D" uid="uid://i8rt2qpm2qpg" path="res://player/arrow_shadow.png" id="3_cjjti"]
+[ext_resource type="Texture2D" uid="uid://coqtwbx2dck8a" path="res://player/arrow.png" id="4_bd20q"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4and3"]
+resource_local_to_scene = true
+shader = ExtResource("1_7a4sk")
+shader_parameter/flash = false
+shader_parameter/stunned = false
+
+[sub_resource type="Animation" id="Animation_gaa3n"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:material:shader_parameter/flash")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_p313h"]
+resource_name = "cast_neutral"
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.25, 0.35, 0.45),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1, 0.7), Vector2(1, 0.6), Vector2(1, 1), Vector2(1, 0.8), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.25, 0.35),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 0), Vector2(0, -2), Vector2(0, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.25),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"cast_trigger_frame"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_w1cm5"]
+resource_name = "idle"
+length = 0.5
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.1, 0.9)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ivue8"]
+_data = {
+"RESET": SubResource("Animation_gaa3n"),
+"cast_neutral": SubResource("Animation_p313h"),
+"idle": SubResource("Animation_w1cm5")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1fdt7"]
+size = Vector2(16, 16)
+
+[sub_resource type="Animation" id="Animation_2o2rx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/flash")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_k5tj5"]
+resource_name = "flash"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/flash")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ikd5u"]
+_data = {
+"RESET": SubResource("Animation_2o2rx"),
+"flash": SubResource("Animation_k5tj5")
+}
+
+[node name="Player" type="StaticBody2D" groups=["player"]]
+z_index = 1
+material = SubResource("ShaderMaterial_4and3")
+script = ExtResource("1_vmyj3")
+
+[node name="Arrow" type="Sprite2D" parent="."]
+position = Vector2(0, 4)
+texture = ExtResource("4_bd20q")
+
+[node name="Shadow" type="Sprite2D" parent="Arrow"]
+z_index = -1
+texture = ExtResource("3_cjjti")
+
+[node name="Arrow" type="Sprite2D" parent="Arrow"]
+modulate = Color(1, 1, 1, 0.6)
+z_index = 1
+texture = ExtResource("4_bd20q")
+
+[node name="Shadow" type="Sprite2D" parent="."]
+texture = ExtResource("2_adlyx")
+offset = Vector2(0, -4)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+use_parent_material = true
+texture = ExtResource("1_v3odk")
+offset = Vector2(0, -8)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ivue8")
+}
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1fdt7")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+rotation = -0.00253772
+target_position = Vector2(16, 0)
+
+[node name="ShaderAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ikd5u")
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

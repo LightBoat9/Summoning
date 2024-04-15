@@ -37,23 +37,36 @@ var facing: Vector2 = Vector2(1, 0) :
 var spawn_index = 0
 var is_enemy = false
 var cast_spawn_type = SpawnManager.Spawn.Slime
-var max_mana = 100
+var max_mana = 100:
+	set(value):
+		max_mana = value
+		update_stat_labels()
 var mana = max_mana:
 	set(value):
 		mana = clamp(value, 0, max_mana)
 		Globals.ManaBar.value = mana
-var max_health = 100
+		update_stat_labels()
+var max_health = 100:
+	set(value):
+		max_health = value
+		update_stat_labels()
 var health = max_health:
 	set(value):
 		health = clamp(value, 0, max_health)
+		if health <= 0:
+			die()
 		Globals.HealthBar.value = health
+		update_stat_labels()
 		
 var default_health_regen = 1
 var health_regen_count = default_health_regen
 
-var default_mana_regen = 1
-var mana_regen_count = default_mana_regen
-var ignore_enemies = false
+var default_mana_regen = 1:
+	set(value):
+		default_mana_regen = value
+		update_stat_labels()
+var mana_regen_count = 1.0/default_mana_regen
+var ignore_spawns = false
 
 var state = State.IDLE :
 	set(value):
@@ -71,7 +84,7 @@ var state = State.IDLE :
 @onready var shader_animation = $ShaderAnimation
 
 
-var runes = [null, null, null, null, null, null, null, null, null]
+var runes = [null, null, null, null, null]
 
 
 # Called when the node enters the scene tree for the first time.
@@ -79,13 +92,13 @@ func _ready():
 	facing = Vector2(1, 0)
 	var rune = Rune.new()
 	rune.rune_type = Rune.RuneType.SPAWN
-	rune.rune_type_index = SpawnManager.Spawn.Bow
+	rune.rune_type_index = SpawnManager.Spawn.Slime
 	runes[0] = rune
 	
-	rune = Rune.new()
-	rune.rune_type = Rune.RuneType.SPAWN
-	rune.rune_type_index = SpawnManager.Spawn.Ghost
-	runes[1] = rune
+	Globals.reload()
+	
+	health = health
+	mana = mana
 	
 	update_runes()
 	
@@ -114,14 +127,18 @@ func _input(event):
 	
 func state_input_idle(event):
 	input_control(event)
-	if event is InputEventKey and (event.keycode >= KEY_1 and event.keycode <= KEY_9 or event.keycode >= KEY_KP_1 and event.keycode <= KEY_KP_9):
+	if event is InputEventKey and event.pressed and not event.echo and (event.keycode >= KEY_1 and event.keycode <= KEY_9 or event.keycode >= KEY_KP_1 and event.keycode <= KEY_KP_9):
 		if event.keycode >= KEY_KP_1:
 			cast_spawn_type = event.keycode % KEY_KP_1
 		else:
 			cast_spawn_type = event.keycode % KEY_1
 		if runes[cast_spawn_type] and ((runes[cast_spawn_type] and runes[cast_spawn_type].rune_type == runes[cast_spawn_type].RuneType.SPELL) or not raycast.is_colliding()):
-			if mana >= 10:
+			if mana >= runes[cast_spawn_type].get_mana():
 				state = State.CASTING
+			else:
+				$AudioNoMana.play()
+		elif raycast.is_colliding():
+			$AudioBlocked.play()
 	
 func state_input_waiting(event):
 	input_control(event)
@@ -142,7 +159,9 @@ func state_entered_idle():
 	
 	
 func state_entered_casting():
-	mana -= 10
+	if not runes[cast_spawn_type]:
+		state = State.IDLE
+	mana -= runes[cast_spawn_type].get_mana()
 	animation.play("cast_neutral")
 	
 	
@@ -150,7 +169,8 @@ func is_alive():
 	return true
 	
 	
-func damage(amount):
+func damage(amount, ignore_shields=false):
+	$AudioHurt.play()
 	shader_animation.play("flash")
 	health -= amount
 	
@@ -159,6 +179,7 @@ func cast_trigger_frame():
 	if not animation or runes[cast_spawn_type] == null:
 		state = State.WAITING
 		return
+	$AudioCast.play()
 	if runes[cast_spawn_type].rune_type == Rune.RuneType.SPAWN:
 		var spawn = SpawnManager.get_spawn(runes[cast_spawn_type].rune_type_index)
 		get_parent().add_child(spawn)
@@ -182,8 +203,17 @@ func _on_animation_player_animation_finished(anim_name):
 	
 	
 func get_health_regen():
-	return default_health_regen
+	return 1.0/default_health_regen
 	
 	
 func get_mana_regen():
-	return default_mana_regen
+	return 1.0/default_mana_regen
+	
+	
+func die():
+	Globals.end_game()
+	
+	
+func update_stat_labels():
+	Globals.ManaBarLabel.text = "%d/%d +%.1f/sec" % [mana, max_mana, default_mana_regen]
+	Globals.HealthBarLabel.text = "%d/%d +%.1f/sec" % [health, max_health, default_health_regen]
